@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <!-- No sim time since you're using real hardware -->
+  <param name="/use_sim_time" value="false"/>
+
+
+
+  <!-- Sleep a bit to let pose_estimation warm up -->
+  <include file="$(find hector_mapping)/launch/mapping_default.launch"/>
+
+  <!-- Ensure use_sim_time is false if using real IMU/LiDAR -->
+
+<!-- Include the IMU-attitude-to-TF launch (after hector_mapping is launched) -->
+  <include file="$(find hector_imu_attitude_to_tf)/launch/example.launch"/>
+
+
+
+
+
+  <!-- Optional RViz -->
+  <node pkg="rviz" type="rviz" name="rviz"
+        args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.rviz"/>
+
+  <!-- Optional map saving -->
+  <include file="$(find hector_geotiff_launch)/launch/geotiff_mapper.launch">
+    <arg name="trajectory_source_frame_name" value="scanmatcher_frame"/>
+    <arg name="map_file_path" value="$(find hector_geotiff)/maps"/>
+  </include>
+
+
+
+</launch>
